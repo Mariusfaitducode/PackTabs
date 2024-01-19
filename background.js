@@ -1,21 +1,27 @@
-let linkPack = [];
+
+
+
+class Pack{
+  constructor(){
+    this.links = [];
+    this.name = "";
+  }
+}
+
+
+// Chargement
+
+let packsArray = [];
 
 console.log("Background script running");
 
-function saveCurrentLinks() {
-  browser.tabs.query({currentWindow: true, active: true}).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, {action: "getLinks"}).then(response => {
-      linkPack = response.links;
-      console.log("Links saved:", linkPack);
-    });
-  });
+if (typeof browser === "undefined") {
+  var browser = chrome;
 }
 
-function reopenLinks() {
-  linkPack.forEach(link => {
-    browser.tabs.create({url: link});
-  });
-}
+
+
+// Actions
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "save") {
@@ -26,9 +32,69 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // Content script to fetch links from the current page
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "getLinks") {
-    let links = Array.from(document.querySelectorAll('a')).map(link => link.href);
-    sendResponse({links: links});
-  }
-});
+// browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   if (request.action === "getLinks") {
+//     let links = Array.from(document.querySelectorAll('a')).map(link => link.href);
+//     sendResponse({links: links});
+//   }
+// });
+
+function saveCurrentLinks() {
+
+  browser.tabs.query({currentWindow: true}, function(tabs){
+    console.log("Save tabs:", tabs);
+    saveNewPack(tabs.map(tab => tab.url));
+    localStorage.setItem("links", tabs.map(tab => tab.url));
+
+  });
+}
+
+// function reopenLinks() {
+
+//   console.group("reopenLinks")
+//   getSavedPacks();
+//   // packsArray.forEach(link => {
+//   //   browser.tabs.create({url: link});
+//   // });
+// }
+
+
+
+// Stockage
+
+// Pour sauvegarder des liens
+function saveNewPack(links) {
+  browser.storage.local.get({packs : []}, function(data) {
+    let packs = data.packs || [];
+
+    let newPack = new Pack();
+    newPack.links = links;
+    packs.push(newPack);
+
+    browser.storage.local.set({packs: packs}, function() {
+      console.log("Nouveau pack ajouté");
+      updatePopup();
+    });
+  });
+}
+
+// Pour récupérer des liens
+function getSavedPacks() {
+  browser.storage.local.get("packs", function(data) {
+      console.log("Packs récupérés", data.packs);
+      packsArray = data.savedLinks;
+  });
+}
+
+
+// Display
+
+function updatePopup() {
+  chrome.runtime.sendMessage({ action: "updatePacksDisplay" });
+}
+
+
+
+
+
+
