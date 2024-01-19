@@ -3,8 +3,10 @@
 
 class Pack{
   constructor(){
-    this.links = [];
+    this.id = null;
     this.name = "";
+    this.color = "";
+    this.links = [];
   }
 }
 
@@ -19,6 +21,10 @@ if (typeof browser === "undefined") {
   var browser = chrome;
 }
 
+// browser.storage.local.set({packs: []}, function() {
+//   console.log("Reset packs");
+// });
+
 
 
 // Actions
@@ -30,14 +36,6 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     reopenLinks();
   }
 });
-
-// Content script to fetch links from the current page
-// browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//   if (request.action === "getLinks") {
-//     let links = Array.from(document.querySelectorAll('a')).map(link => link.href);
-//     sendResponse({links: links});
-//   }
-// });
 
 function saveCurrentLinks() {
 
@@ -68,6 +66,7 @@ function saveNewPack(links) {
     let packs = data.packs || [];
 
     let newPack = new Pack();
+    newPack.name = "Pack " + (packs.length + 1);
     newPack.links = links;
     packs.push(newPack);
 

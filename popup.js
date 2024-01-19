@@ -27,11 +27,12 @@ document.getElementById('saveButton').addEventListener('click', () => {
     browser.runtime.sendMessage({action: "save"});
   });
   
-  document.getElementById('openButton').addEventListener('click', () => {
+// document.getElementById('openButton').addEventListener('click', () => {
 
-    console.log("open button clicked")
-    browser.runtime.sendMessage({action: "open"});
-  });
+//     console.log("open button clicked")
+//     browser.runtime.sendMessage({action: "open"});
+//   });
+
   
 
   // Display
@@ -48,22 +49,65 @@ document.getElementById('saveButton').addEventListener('click', () => {
             data.packs.forEach(pack => {
                 const packElement = document.createElement("div");
                 packElement.className = "pack";
-  
-                const title = document.createElement("h3");
-                title.textContent = pack.name;
+
+
+                const packHeader = document.createElement("div");
+                packHeader.className = "packHeader";
+
+                const packName = document.createElement("input");
+                packName.type = "text";
+                packName.value = pack.name;
+                packName.className = "packName";
+
+                packName.addEventListener("change", function() {
+                    pack.name = packName.value;
+                    browser.storage.local.set({packs: data.packs}, function() {
+                        console.log("Pack name updated");
+                    });
+                });
+
+                const openButton = document.createElement("button");
+                openButton.className = "packButton";
+
+                const openIcon = document.createElement("img");
+                openIcon.src = "icons/open-window.svg";
+                openIcon.alt = "Open pack";
+                openIcon.className = "openIcon";
+
+                openButton.appendChild(openIcon);
+
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "packButton";
+
+                const deleteIcon = document.createElement("img");
+                deleteIcon.src = "icons/delete-pack.svg";
+                deleteIcon.alt = "Delete pack";
+                deleteIcon.className = "deleteIcon";
+
+                deleteButton.appendChild(deleteIcon);
+
+
+                packHeader.appendChild(packName);
+                packHeader.appendChild(openButton);
+                packHeader.appendChild(deleteButton);
   
                 const linksList = document.createElement("ul");
+                linksList.className = "links";
                 pack.links.forEach(link => {
                     let listItem = document.createElement("li");
                     listItem.textContent = link;
                     linksList.appendChild(listItem);
                 });
   
-                packElement.appendChild(title);
+                packElement.appendChild(packHeader);
                 packElement.appendChild(linksList);
-                
+
                 packsContainer.appendChild(packElement);
             });
         }
     });
   }
+
+
+  

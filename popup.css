@@ -1,0 +1,113 @@
+
+
+:root{
+    --white: #ffffff;
+
+    --black: #000000;
+    --dark-gray: #222;
+    --gray: #333;
+    --middle-gray: #444;
+    --light-gray: #555;
+
+    --green-border: #00dd00;
+    --green: #007200;
+
+    /* --red-border: #a30000; */
+}
+
+
+
+.content{
+    width: 100%;
+    min-width: 250px;
+    height: 100%;
+    background-color: var(--dark-gray);
+    color: var(--white);
+    /* border-radius: 100px; */
+    margin: 0px;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.saveButton{
+    /* width: 100%;
+    height: 40px; */
+    background-color: var(--green);
+    color: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--green-border);
+    margin: 12px 0px;
+    padding: 4px 8px;
+}
+
+.container{
+    margin-top: 20px;
+}
+
+
+.pack{
+    width: 100%;
+    height: 100%;
+    background-color: var(--gray);
+    color: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--light-gray);
+    margin: 12px 0px;
+    /* margin-right: 10px; */
+}
+
+.packHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0px;
+
+}
+
+.packName{
+    background: none;
+    border: none;
+    color: var(--white);
+    
+    padding: 4px;
+    margin-left: 8px;
+    font-size: 16px;
+}
+
+.packName:focus {
+    outline: none;
+    border-bottom: var(--white) solid 1px;
+    /* border-color: #007BFF; */
+}
+
+
+.packButton{
+    background: none;
+    border: none;
+    /* color: var(--white);
+    width: 18px;
+    height: 18px; */
+
+}
+
+.openIcon{
+    width: 18px;
+    height: 18px;
+    /* stroke: var(--white); */
+}
+
+.deleteIcon{
+    width: 18px;
+    height: 18px;
+    /* stroke: var(--white); */
+}
+
+
+
+.links{
+    width: 0%;
+    height: 0%;
+    display: none;
+}
