@@ -1,4 +1,5 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
 
 :root{
     --white: #ffffff;
@@ -17,7 +18,7 @@
 
 
 
-.content{
+body{
     width: 100%;
     min-width: 250px;
     height: 100%;
@@ -28,6 +29,8 @@
     padding: 16px;
     box-sizing: border-box;
     overflow: auto;
+
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .saveButton{
@@ -89,25 +92,43 @@
     /* color: var(--white);
     width: 18px;
     height: 18px; */
-
 }
 
-.openIcon{
-    width: 18px;
-    height: 18px;
+.packButton:hover{
+    cursor: pointer;
+    /* color: var(--white); */
+}
+
+.packIcon{
+    width: 20px;
+    height: 20px;
     /* stroke: var(--white); */
 }
 
-.deleteIcon{
+/* .deleteIcon{
     width: 18px;
     height: 18px;
-    /* stroke: var(--white); */
-}
+    stroke: var(--white);
+} */
 
 
 
 .links{
-    width: 0%;
-    height: 0%;
-    display: none;
+    font-size: 14px;
+
+    /* overflow: hidden; */
+
+    max-width: 350px;
+
+    
+
+    /* display: none; */
+}
+
+.link{
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    margin-right: 16px;
+    white-space: nowrap;
 }

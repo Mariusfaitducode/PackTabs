@@ -72,7 +72,7 @@ document.getElementById('saveButton').addEventListener('click', () => {
                 const openIcon = document.createElement("img");
                 openIcon.src = "icons/open-window.svg";
                 openIcon.alt = "Open pack";
-                openIcon.className = "openIcon";
+                openIcon.className = "packIcon";
 
                 openButton.appendChild(openIcon);
 
@@ -83,20 +83,41 @@ document.getElementById('saveButton').addEventListener('click', () => {
                 const deleteIcon = document.createElement("img");
                 deleteIcon.src = "icons/delete-pack.svg";
                 deleteIcon.alt = "Delete pack";
-                deleteIcon.className = "deleteIcon";
+                deleteIcon.className = "packIcon";
 
                 deleteButton.appendChild(deleteIcon);
 
+                const expandButton = document.createElement("button");
+                expandButton.className = "packButton";
+
+                const expandIcon = document.createElement("img");
+                expandIcon.src = "icons/expand-more.svg";
+
+                expandButton.appendChild(expandIcon);
 
                 packHeader.appendChild(packName);
                 packHeader.appendChild(openButton);
                 packHeader.appendChild(deleteButton);
+                packHeader.appendChild(expandButton);
   
                 const linksList = document.createElement("ul");
                 linksList.className = "links";
+                linksList.style.display = "none";
+
+                expandButton.addEventListener("click", function() {
+                    if (linksList.style.display === "none") {
+                        linksList.style.display = "block";
+                        expandIcon.src = "icons/expand-less.svg";
+                    } else {
+                        linksList.style.display = "none";
+                        expandIcon.src = "icons/expand-more.svg";
+                    }
+                });
+
                 pack.links.forEach(link => {
                     let listItem = document.createElement("li");
                     listItem.textContent = link;
+                    listItem.className = "link";
                     linksList.appendChild(listItem);
                 });
   
