@@ -50,9 +50,14 @@ document.getElementById('saveButton').addEventListener('click', () => {
                 const packElement = document.createElement("div");
                 packElement.className = "pack";
 
-
                 const packHeader = document.createElement("div");
                 packHeader.className = "packHeader";
+
+                const headerLeft = document.createElement("div");
+                headerLeft.className = "headerLeft";
+
+                const packColor = document.createElement("div");
+                packColor.className = "packColor";
 
                 const packName = document.createElement("input");
                 packName.type = "text";
@@ -65,6 +70,12 @@ document.getElementById('saveButton').addEventListener('click', () => {
                         console.log("Pack name updated");
                     });
                 });
+
+                headerLeft.appendChild(packColor);
+                headerLeft.appendChild(packName);
+
+                const headerButtons = document.createElement("div")
+                headerButtons.className = 'headerButtons';
 
                 const openButton = document.createElement("button");
                 openButton.className = "packButton";
@@ -95,10 +106,13 @@ document.getElementById('saveButton').addEventListener('click', () => {
 
                 expandButton.appendChild(expandIcon);
 
-                packHeader.appendChild(packName);
-                packHeader.appendChild(openButton);
-                packHeader.appendChild(deleteButton);
-                packHeader.appendChild(expandButton);
+                headerButtons.appendChild(openButton);
+                headerButtons.appendChild(deleteButton);
+                headerButtons.appendChild(expandButton);
+
+                packHeader.appendChild(headerLeft);
+                packHeader.appendChild(headerButtons);
+
   
                 const linksList = document.createElement("ul");
                 linksList.className = "links";
@@ -116,8 +130,35 @@ document.getElementById('saveButton').addEventListener('click', () => {
 
                 pack.links.forEach(link => {
                     let listItem = document.createElement("li");
-                    listItem.textContent = link;
-                    listItem.className = "link";
+                    listItem.className = "listItem";
+
+                    let linkContainer = document.createElement("div");
+                    linkContainer.className = "linkContainer";
+
+                    let listLinkPoint = document.createElement("div");
+                    listLinkPoint.className = "listLinkPoint";
+
+                    let listLink = document.createElement("div")
+                    listLink.textContent = link;
+                    listLink.className = "listLink";
+
+                    linkContainer.appendChild(listLinkPoint);
+                    linkContainer.appendChild(listLink);
+
+                    let removeLinkButton = document.createElement("button");
+                    removeLinkButton.className = "packButton";
+
+                    const removeLinkIcon = document.createElement("img");
+                    removeLinkIcon.src = "icons/close-link.svg";
+                    removeLinkIcon.alt = "Remove link";
+                    removeLinkIcon.className = "packIcon";
+
+                    removeLinkButton.appendChild(removeLinkIcon);
+
+                    // listItem.appendChild(listLinkPoint);
+                    listItem.appendChild(linkContainer);
+                    listItem.appendChild(removeLinkButton);
+
                     linksList.appendChild(listItem);
                 });
   
