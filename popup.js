@@ -1,7 +1,10 @@
 
 // Chargement
 
+console.log("Popup script running");
+
 let packsArray = [];
+let currentWindowId = null;
 
 if (typeof browser === "undefined") {
   var browser = chrome;
@@ -19,12 +22,17 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 
+browser.windows.getCurrent({ populate: true }, function(currentWindow) {
+  currentWindowId = currentWindow.id;
+});
+
+
 // Actions
 
 document.getElementById('saveButton').addEventListener('click', () => {
 
     console.log("save button clicked");
-    browser.runtime.sendMessage({action: "save"});
+    browser.runtime.sendMessage({action: "save", currentWindowId: currentWindowId});
   });
   
 // document.getElementById('openButton').addEventListener('click', () => {
@@ -49,6 +57,10 @@ document.getElementById('saveButton').addEventListener('click', () => {
             data.packs.forEach(pack => {
                 const packElement = document.createElement("div");
                 packElement.className = "pack";
+
+                console.log("display pack", pack)
+
+                console.log("current window id", currentWindowId)
 
                 const packHeader = document.createElement("div");
                 packHeader.className = "packHeader";
@@ -101,6 +113,10 @@ document.getElementById('saveButton').addEventListener('click', () => {
                 deleteIcon.className = "packIcon";
 
                 deleteButton.appendChild(deleteIcon);
+
+                deleteButton.addEventListener("click", function() {
+                    browser.runtime.sendMessage({action: "delete", pack: pack});
+                });
 
                 const expandButton = document.createElement("button");
                 expandButton.className = "packButton";
@@ -170,6 +186,12 @@ document.getElementById('saveButton').addEventListener('click', () => {
                 packElement.appendChild(linksList);
 
                 packsContainer.appendChild(packElement);
+
+                if (pack.windowId === currentWindowId) {
+                  packElement.classList.add("currentPack");
+                  openButton.disabled = true;
+                  openButton.classList.add("disabled");
+              }
             });
         }
     });

@@ -4,6 +4,7 @@
 class Pack{
   constructor(){
     this.windowId = null;
+    this.id = null;
     this.name = "";
     this.color = "";
     this.links = [];
@@ -31,22 +32,27 @@ if (typeof browser === "undefined") {
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "save") {
-    saveCurrentLinks();
-  } else if (message.action === "open") {
+    saveCurrentLinks(message.currentWindowId);
+  } 
+  else if (message.action === "open") {
     console.log("open button clicked")
     console.log("message pack", message.pack)
     openPackWindow(message.pack);
   }
+  else if (message.action === "delete") {
+    console.log("delete button clicked")
+    deletePack(message.pack);
+  }
 });
 
 
-function saveCurrentLinks() {
+function saveCurrentLinks(currentWindowId) {
 
-  browser.tabs.query({currentWindow: true}, function(tabs){
-    console.log("Save tabs:", tabs);
-    saveNewPack(tabs.map(tab => tab.url));
-    localStorage.setItem("links", tabs.map(tab => tab.url));
+  browser.tabs.query({windowId: currentWindowId}, function(tabs){
 
+      console.log("Save tabs:", tabs);
+      console.log("Current window:", currentWindowId);
+      saveNewPack(tabs.map(tab => tab.url), currentWindowId);
   });
 }
 
@@ -96,13 +102,15 @@ function createNewWindowForPack(pack) {
 // Stockage
 
 // Pour sauvegarder des liens
-function saveNewPack(links) {
+function saveNewPack(links, windowId) {
   browser.storage.local.get({packs : []}, function(data) {
     let packs = data.packs || [];
 
     let newPack = new Pack();
     newPack.name = "Pack " + (packs.length + 1);
+    newPack.id = packs.length + 1;
     newPack.links = links;
+    newPack.windowId = windowId;
     packs.push(newPack);
 
     browser.storage.local.set({packs: packs}, function() {
@@ -124,16 +132,32 @@ function getSavedPacks() {
 function updatePackInStorage(updatedPack) {
   browser.storage.local.get({ packs: [] }, function(data) {
     let packs = data.packs;
-    let packIndex = packs.findIndex(pack => pack.name === updatedPack.name);
+    let packIndex = packs.findIndex(pack => pack.id === updatedPack.id);
     if (packIndex !== -1) {
       packs[packIndex] = updatedPack;
       chrome.storage.local.set({ packs: packs });
       console.log("Pack updated", packs);
+      updatePopup();
     }
     console.log("Pack index", packIndex);
   });
 }
 
+
+// Pour supprimer un pack
+function deletePack(pack) {
+  browser.storage.local.get({ packs: [] }, function(data) {
+    let packs = data.packs;
+    let packIndex = packs.findIndex(p => p.id === pack.id);
+    if (packIndex !== -1) {
+      packs.splice(packIndex, 1);
+      chrome.storage.local.set({ packs: packs });
+      console.log("Pack deleted", packs);
+      updatePopup();
+    }
+    console.log("Pack index", packIndex);
+  });
+}
 
 // Display
 

@@ -49,6 +49,11 @@ body{
 }
 
 
+.pack.currentPack{
+    border: 3px solid var(--light-gray);
+}
+
+
 .pack{
     width: 100%;
     height: 100%;
@@ -121,6 +126,11 @@ body{
 .packButton:hover{
     cursor: pointer;
     /* color: var(--white); */
+}
+
+.packButton.disabled{
+    opacity: 0.5;
+    cursor: default; 
 }
 
 .packIcon{
