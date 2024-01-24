@@ -1,5 +1,5 @@
 
-
+// Pack model
 
 class Pack{
   constructor(){
@@ -16,60 +16,44 @@ class Pack{
 
 let packsArray = [];
 
-console.log("Background script running");
-
+// Détermination du navigateur (Chrome ou Firefox)
 if (typeof browser === "undefined") {
   var browser = chrome;
 }
 
-// browser.storage.local.set({packs: []}, function() {
-//   console.log("Reset packs");
-// });
-
-
 
 // Actions
 
+// Réceptions des messages provenant des scripts de contenu et de popup
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "save") {
     saveCurrentLinks(message.currentWindowId);
   } 
   else if (message.action === "open") {
-    console.log("open button clicked")
-    console.log("message pack", message.pack)
     openPackWindow(message.pack);
   }
   else if (message.action === "delete") {
-    console.log("delete button clicked")
     deletePack(message.pack);
   }
 });
 
 
+// Sauvegarde des liens de la fenêtre courante
 function saveCurrentLinks(currentWindowId) {
 
   browser.tabs.query({windowId: currentWindowId}, function(tabs){
-
-      console.log("Save tabs:", tabs);
-      console.log("Current window:", currentWindowId);
       saveNewPack(tabs.map(tab => tab.url), currentWindowId);
   });
 }
 
-// function reopenLinks() {
 
-//   console.group("reopenLinks")
-//   getSavedPacks();
-//   // packsArray.forEach(link => {
-//   //   browser.tabs.create({url: link});
-//   // });
-// }
-
-
+// Ouverture d'un pack
 function openPackWindow(pack) {
   // Vérifier si une fenêtre est déjà ouverte pour ce pack
   if (pack.windowId !== null && pack.windowId !== undefined) {
+
     browser.windows.get(pack.windowId, { populate: true }, function(window) {
+
       if (browser.runtime.lastError || !window) {
         // La fenêtre n'existe plus, ouvrir une nouvelle fenêtre
         createNewWindowForPack(pack);
@@ -85,6 +69,7 @@ function openPackWindow(pack) {
 }
 
 
+// Création d'une nouvelle fenêtre pour un pack
 function createNewWindowForPack(pack) {
   let urls = pack.links;
   browser.windows.create({ url: urls, type: "normal" }, function(window) {
@@ -95,18 +80,14 @@ function createNewWindowForPack(pack) {
 }
 
 
-
-
-
-
 // Stockage
 
-// Pour sauvegarder des liens
+// Sauvegarder les liens de la fenêtre courante
 function saveNewPack(links, windowId) {
 
   browser.storage.local.get({packs : []}, function(data) {
-    let packs = data.packs || [];
 
+    let packs = data.packs || [];
     let packIndex = packs.findIndex(pack => pack.windowId === windowId);
 
     if (packIndex !== -1){
@@ -122,23 +103,21 @@ function saveNewPack(links, windowId) {
       newPack.windowId = windowId;
       packs.push(newPack);
     }
-
-    
-
+    // Sauvegarder les packs
     browser.storage.local.set({packs: packs}, function() {
-      console.log("Nouveau pack ajouté");
       updatePopup();
     });
   });
 }
 
+
 // Pour récupérer des liens
 function getSavedPacks() {
   browser.storage.local.get("packs", function(data) {
-      console.log("Packs récupérés", data.packs);
       packsArray = data.savedLinks;
   });
 }
+
 
 // Pour mettre à jour un pack
 function updatePackInStorage(updatedPack) {
@@ -148,10 +127,8 @@ function updatePackInStorage(updatedPack) {
     if (packIndex !== -1) {
       packs[packIndex] = updatedPack;
       chrome.storage.local.set({ packs: packs });
-      console.log("Pack updated", packs);
       updatePopup();
     }
-    console.log("Pack index", packIndex);
   });
 }
 
@@ -164,15 +141,13 @@ function deletePack(pack) {
     if (packIndex !== -1) {
       packs.splice(packIndex, 1);
       chrome.storage.local.set({ packs: packs });
-      console.log("Pack deleted", packs);
       updatePopup();
     }
-    console.log("Pack index", packIndex);
   });
 }
 
-// Display
 
+// Actualiser la popup
 function updatePopup() {
   chrome.runtime.sendMessage({ action: "updatePacksDisplay" });
 }

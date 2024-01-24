@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "PackTabs",
     "version": "1.0",
-    "description": "Save and reopen link packs in Firefox.",
+    "description": "Save, reopen and manage your windows.",
     "icons": {
       "48": "./icons/popup-icon.png"
     },
