@@ -87,6 +87,10 @@ document.getElementById('saveButton').addEventListener('click', () => {
 
                 openButton.appendChild(openIcon);
 
+                openButton.addEventListener("click", function() {
+                    browser.runtime.sendMessage({action: "open", pack: pack});
+                });
+
 
                 const deleteButton = document.createElement("button");
                 deleteButton.className = "packButton";
