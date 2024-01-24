@@ -103,15 +103,27 @@ function createNewWindowForPack(pack) {
 
 // Pour sauvegarder des liens
 function saveNewPack(links, windowId) {
+
   browser.storage.local.get({packs : []}, function(data) {
     let packs = data.packs || [];
 
-    let newPack = new Pack();
-    newPack.name = "Pack " + (packs.length + 1);
-    newPack.id = packs.length + 1;
-    newPack.links = links;
-    newPack.windowId = windowId;
-    packs.push(newPack);
+    let packIndex = packs.findIndex(pack => pack.windowId === windowId);
+
+    if (packIndex !== -1){
+      // Update pack
+      packs[packIndex].links = links;
+    }
+    else{
+      // Add new pack
+      let newPack = new Pack();
+      newPack.name = "Pack " + (packs.length + 1);
+      newPack.id = packs.length + 1;
+      newPack.links = links;
+      newPack.windowId = windowId;
+      packs.push(newPack);
+    }
+
+    
 
     browser.storage.local.set({packs: packs}, function() {
       console.log("Nouveau pack ajouté");

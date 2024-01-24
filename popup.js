@@ -78,12 +78,18 @@ document.getElementById('saveButton').addEventListener('click', () => {
 
                 packName.addEventListener("change", function() {
                     pack.name = packName.value;
+
+                    if (currentWindowId === pack.windowId) {
+                        saveButton = document.getElementById("saveButton");
+                        saveButton.textContent = "Update '"+ pack.name +"' pack";
+                    }
+
                     browser.storage.local.set({packs: data.packs}, function() {
                         console.log("Pack name updated");
                     });
                 });
 
-                headerLeft.appendChild(packColor);
+                // headerLeft.appendChild(packColor);
                 headerLeft.appendChild(packName);
 
                 const headerButtons = document.createElement("div")
@@ -175,6 +181,16 @@ document.getElementById('saveButton').addEventListener('click', () => {
 
                     removeLinkButton.appendChild(removeLinkIcon);
 
+                    removeLinkButton.addEventListener("click", function() {
+                        pack.links = pack.links.filter(linkItem => linkItem !== link);
+
+                        browser.storage.local.set({packs: data.packs}, function() {
+                            console.log("Link removed");
+                        });
+
+                        listItem.remove();
+                    });
+
                     // listItem.appendChild(listLinkPoint);
                     listItem.appendChild(linkContainer);
                     listItem.appendChild(removeLinkButton);
@@ -191,6 +207,9 @@ document.getElementById('saveButton').addEventListener('click', () => {
                   packElement.classList.add("currentPack");
                   openButton.disabled = true;
                   openButton.classList.add("disabled");
+
+                  saveButton = document.getElementById("saveButton");
+                  saveButton.textContent = "Update '"+ pack.name +"' pack";
               }
             });
         }
